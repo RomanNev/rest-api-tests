@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class exampleApiTest {
+public class ExampleApiTest {
     @Test
     void checkTotal() {
         given()
