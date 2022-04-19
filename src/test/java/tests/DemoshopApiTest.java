@@ -13,16 +13,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 
-public class DemoshopApiTest {
-
-    static String URL = "http://demowebshop.tricentis.com/";
-
-    @BeforeAll
-    static void beforeAll() {
-        Configuration.baseUrl = URL;
-        Configuration.browserSize = "1920x1080";
-
-    }
+public class DemoshopApiTest extends TestBase {
 
     @Test
     void loginOldUserTest() {
