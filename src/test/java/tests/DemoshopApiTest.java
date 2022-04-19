@@ -79,5 +79,19 @@ public class DemoshopApiTest extends TestBase {
 
     }
 
+    @Test
+    void votingWithoutAuthorization() {
+        given()
+                .contentType("application/x-www-form-urlencoded; charset=UTF-8")
+                .body("pollAnswerId=2")
+                .when()
+                .post("http://demowebshop.tricentis.com/poll/vote")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("error", is("Only registered users can vote."));
+
+    }
+
 
 }
