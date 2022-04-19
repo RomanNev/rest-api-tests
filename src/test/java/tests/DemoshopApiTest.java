@@ -1,10 +1,7 @@
 package tests;
 
-import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Cookie;
-
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -33,7 +30,6 @@ public class DemoshopApiTest extends TestBase {
         getWebDriver().manage().addCookie(new Cookie("NOPCOMMERCE.AUTH", authorizationCookie));
         open("");// открыть главную страницу для поиска залогиненого пользователя
         $(".account").shouldHave(text("golubtestuser@test.com"));
-
 
     }
 
@@ -92,6 +88,4 @@ public class DemoshopApiTest extends TestBase {
                 .body("error", is("Only registered users can vote."));
 
     }
-
-
 }
