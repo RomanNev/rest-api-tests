@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.http.ContentType.JSON;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static listeners.CustomAllureListener.withCustomTemplates;
 import static org.hamcrest.Matchers.*;
 
@@ -111,5 +112,55 @@ public class ExampleBookstoreTests {
                 .body("result", is("User authorized successfully."))
                 .body("token.size()", (greaterThan(10)));
     }
+
+
+    @Test
+    void getTokenTest() {
+        String data = "{ \"userName\": \"alex\", " +
+                "\"password\": \"asdsad#frew_DFS2\" }";
+
+        String token =
+                given()
+                        .contentType(JSON)
+                        .body(data)
+                        .log().uri()
+                        .log().body()
+                        .when()
+                        .post("https://demoqa.com/Account/v1/GenerateToken")
+                        .then()
+                        .log().status()
+                        .log().body()
+                        .statusCode(200)
+                        .body("status", is("Success"))
+                        .body("result", is("User authorized successfully."))
+                        .extract().path("token");
+
+        System.out.println("Token: " + token);
+    }
+
+
+    @Test
+    void generateTokenJsonSchemeCheckTest() {
+        String data = "{ \"userName\": \"alex\", " +
+                "\"password\": \"asdsad#frew_DFS2\" }";
+
+        given()
+                .filter(withCustomTemplates())
+                .contentType(JSON)
+                .body(data)
+                .log().uri()
+                .log().body()
+                .when()
+                .post("https://demoqa.com/Account/v1/GenerateToken")
+                .then()
+                .log().status()
+                .log().body()
+                .statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schemas/GenerateToken_response_scheme.json"))
+                .body("status", is("Success"))
+                .body("result", is("User authorized successfully."))
+                .body("token.size()", (greaterThan(10)));
+    }
+
 
 }
