@@ -27,14 +27,17 @@ public class ApiTests {
                 "\"password\": \"pistol\"}";
 
         given()
+                .log().all() // вывод в лог запроса
                 .body(registerData)
                 .contentType(JSON)
                 .when()
                 .post("https://reqres.in/api/register")
                 .then()
+                .log().all() // вывод в лог ответа
                 .statusCode(200)
                 .body("id", is(4))
                 .body("token", is("QpwL5tke4Pnpja7X4"));
+
     }
 
 
@@ -55,11 +58,15 @@ public class ApiTests {
         String registerData = "{\"email\": \"sydney@fife\"}";
 
         given()
+                .log().uri()
+                .log().body()
                 .body(registerData)
                 .contentType(JSON)
                 .when()
                 .post("https://reqres.in/api/register")
                 .then()
+                .log().status()
+                .log().body()
                 .statusCode(400)
                 .body("error", is("Missing password"));
 
