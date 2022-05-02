@@ -3,6 +3,8 @@ package tests;
 import io.qameta.allure.restassured.AllureRestAssured;
 import models.Credentials;
 import models.GenerateTokenResponse;
+import models.lombok.CredentialsLombok;
+import models.lombok.GenerateTokenResponseLombok;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.get;
@@ -190,6 +192,38 @@ public class ExampleBookstoreTests {
                         .statusCode(200)
                         .body(matchesJsonSchemaInClasspath("schemas/GenerateToken_response_scheme.json"))
                         .extract().as(GenerateTokenResponse.class); //  передаем полученные значения в GenerateTokenResponse.class
+
+
+        assertThat(tokenResponse.getStatus()).isEqualTo("Success");
+        assertThat(tokenResponse.getResult()).isEqualTo("User authorized successfully.");
+        assertThat(tokenResponse.getExpires()).hasSizeGreaterThan(10);
+        assertThat(tokenResponse.getToken()).hasSizeGreaterThan(10).startsWith("eyJ");
+    }
+
+    @Test
+    void generateTokenWithLombokTest() {
+        //тест с использованием Lombok
+        // позволяет не прописывать самомтоятельно гетеры, сетеры и другие методы в моделях json
+        CredentialsLombok credentials = new CredentialsLombok();
+        credentials.setUserName("alex");
+        credentials.setPassword("asdsad#frew_DFS2");
+
+
+        GenerateTokenResponseLombok tokenResponse =
+                given()
+                        .filter(withCustomTemplates())
+                        .contentType(JSON)
+                        .body(credentials)
+                        .log().uri()
+                        .log().body()
+                        .when()
+                        .post("https://demoqa.com/Account/v1/GenerateToken")
+                        .then()
+                        .log().status()
+                        .log().body()
+                        .statusCode(200)
+                        .body(matchesJsonSchemaInClasspath("schemas/GenerateToken_response_scheme.json"))
+                        .extract().as(GenerateTokenResponseLombok.class); //  передаем полученные значения в GenerateTokenResponse.class
 
 
         assertThat(tokenResponse.getStatus()).isEqualTo("Success");
